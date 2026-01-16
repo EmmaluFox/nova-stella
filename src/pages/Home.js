@@ -4,9 +4,81 @@ import './Home.css';
 function Home() {
   return (
     <div className='home-page'>
-      <div className='home-container'>
-        <h1>Welcome to Nova Stella</h1>
-        <p>Discover our community and upcoming events.</p>
+      {/* Hero Banner */}
+      <div className='hero-banner'>
+        <div className='hero-content'>
+          <h1>NOVA STELLA</h1>
+          <p>Exploring the cosmos and consciousness</p>
+        </div>
+      </div>
+
+      {/* Main Content Sections */}
+      <div className='home-sections'>
+        {/* Section 1 */}
+        <div className='home-section'>
+          <div className='section-image'>
+            {/* Add your image here */}
+          </div>
+          <div className='section-content'>
+            <h2>CLASSES & EVENTS</h2>
+            <p>Regular online lectures and workshops, pre-recorded and live.</p>
+            <a href='/upcoming-talks' className='section-link'>Learn More →</a>
+          </div>
+        </div>
+
+        {/* Section 2 */}
+        <div className='home-section reverse'>
+          <div className='section-image'>
+            {/* Add your image here */}
+          </div>
+          <div className='section-content'>
+            <h2>PAST EVENTS</h2>
+            <p>Explore our archive of past talks and events.</p>
+            <a href='/past-events' className='section-link'>View Archive →</a>
+          </div>
+        </div>
+
+        {/* Section 3 */}
+        <div className='home-section'>
+          <div className='section-image'>
+            {/* Add your image here */}
+          </div>
+          <div className='section-content'>
+            <h2>MEMBERSHIP</h2>
+            <p>Join our inner circle and get exclusive access to our bank of recorded lectures, event discounts and other treats.</p>
+            <a href='/community' className='section-link'>Join Now →</a>
+          </div>
+        </div>
+
+        {/* Section 4 */}
+        <div className='home-section reverse'>
+          <div className='section-image'>
+            {/* Add your image here */}
+          </div>
+          <div className='section-content'>
+            <h2>ABOUT US</h2>
+            <p>Learn more about Nova Stella and our mission.</p>
+            <a href='/about' className='section-link'>Discover More →</a>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Section */}
+      <div className='home-footer'>
+        <div className='footer-content'>
+          <div className='footer-column'>
+            <h3>CONTACT US</h3>
+            <p>Email: info@novastella.com</p>
+          </div>
+          <div className='footer-column'>
+            <h3>FOLLOW US</h3>
+            <p>Connect with us on social media</p>
+          </div>
+          <div className='footer-column'>
+            <h3>SUBSCRIBE</h3>
+            <p>Join our mailing list for updates</p>
+          </div>
+        </div>
       </div>
     </div>
   );
