@@ -29,68 +29,68 @@ function Home() {
 
   return (
     <div className='home-page'>
-      {/* Hero Banner */}
-      <div className='hero-banner'>
-        <div className='hero-content'>
-          <h1>NOVA STELLA</h1>
-          <p>Exploring the cosmos and consciousness</p>
-        </div>
-      </div>
-
       {/* Main Content Sections */}
       <div className='home-sections'>
         {/* Section 1 */}
         <div className='home-section'>
-          <div className='section-image'>
-            {eventImage && <img src={eventImage} alt={firstEvent?.speaker} />}
-          </div>
-          <div className='section-content'>
-            <h2>CLASSES & EVENTS</h2>
-            {firstEvent && (
-              <div className='next-event-info'>
-                <h3>{firstEvent.title}</h3>
-                <p className='event-speaker-name'>{firstEvent.speaker}</p>
-                <p className='event-details'>{firstEvent.date} • {firstEvent.venue}, {firstEvent.city}</p>
-              </div>
-            )}
-            <p>Regular online lectures and workshops, pre-recorded and live.</p>
-            <a href='/upcoming-talks' className='section-link'>Learn More →</a>
+          <h2 className='section-header'>CLASSES & EVENTS</h2>
+          <div className='section-layout'>
+            <div className='section-image'>
+              {eventImage && <img src={eventImage} alt={firstEvent?.speaker} />}
+            </div>
+            <div className='section-content'>
+              {firstEvent && (
+                <div className='next-event-info'>
+                  <h3>{firstEvent.title}</h3>
+                  <p className='event-speaker-name'>{firstEvent.speaker}</p>
+                  <p className='event-details'>{firstEvent.date} • {firstEvent.venue}, {firstEvent.city}</p>
+                </div>
+              )}
+              <p>Regular online lectures and workshops, pre-recorded and live.</p>
+              <a href='/upcoming-talks' className='section-link'>Learn More →</a>
+            </div>
           </div>
         </div>
 
         {/* Section 2 */}
         <div className='home-section reverse'>
-          <div className='section-image'>
-            {/* Add your image here */}
-          </div>
-          <div className='section-content'>
-            <h2>PAST EVENTS</h2>
-            <p>Explore our archive of past talks and events.</p>
-            <a href='/past-events' className='section-link'>View Archive →</a>
+          <h2 className='section-header'>PAST EVENTS</h2>
+          <div className='section-layout'>
+            <div className='section-image'>
+              {/* Add your image here */}
+            </div>
+            <div className='section-content'>
+              <p>Explore our archive of past talks and events.</p>
+              <a href='/past-events' className='section-link'>View Archive →</a>
+            </div>
           </div>
         </div>
 
         {/* Section 3 */}
         <div className='home-section'>
-          <div className='section-image'>
-            {/* Add your image here */}
-          </div>
-          <div className='section-content'>
-            <h2>MEMBERSHIP</h2>
-            <p>Join our inner circle and get exclusive access to our bank of recorded lectures, event discounts and other treats.</p>
-            <a href='/community' className='section-link'>Join Now →</a>
+          <h2 className='section-header'>MEMBERSHIP</h2>
+          <div className='section-layout'>
+            <div className='section-image'>
+              {/* Add your image here */}
+            </div>
+            <div className='section-content'>
+              <p>Join our inner circle and get exclusive access to our bank of recorded lectures, event discounts and other treats.</p>
+              <a href='/community' className='section-link'>Join Now →</a>
+            </div>
           </div>
         </div>
 
         {/* Section 4 */}
         <div className='home-section reverse'>
-          <div className='section-image'>
-            {/* Add your image here */}
-          </div>
-          <div className='section-content'>
-            <h2>ABOUT US</h2>
-            <p>Learn more about Nova Stella and our mission.</p>
-            <a href='/about' className='section-link'>Discover More →</a>
+          <h2 className='section-header'>ABOUT US</h2>
+          <div className='section-layout'>
+            <div className='section-image'>
+              {/* Add your image here */}
+            </div>
+            <div className='section-content'>
+              <p>Learn more about Nova Stella and our mission.</p>
+              <a href='/about' className='section-link'>Discover More →</a>
+            </div>
           </div>
         </div>
       </div>
