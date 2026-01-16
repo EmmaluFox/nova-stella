@@ -1,64 +1,33 @@
-.navbar-logo {
-  color: #fff;
-  justify-self: start;
-  margin-left: 20px;
-  cursor: pointer;
+.logo-link {
   text-decoration: none;
-  font-size: 2rem;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  margin-left: -15px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.logo-image {
+  height: 100px;
+  width: auto;
+  object-fit: contain;
 }
 
 @media screen and (max-width: 768px) {
-  .navbar-logo {
-    font-size: 1.5rem;
-    margin-left: 10px;
+  .logo-image {
+    height: 80px;
   }
 }
 
 @media screen and (max-width: 480px) {
-  .navbar-logo {
-    font-size: 1.2rem;
-    margin-left: 5px;
+  .logo-image {
+    height: 60px;
   }
 }
 
-.fa-typo3 {
-  margin-left: 0.5rem;
-  font-size: 1.8rem;
-}
-
-@media screen and (max-width: 768px) {
-  .fa-typo3 {
-    font-size: 1.4rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .fa-typo3 {
-    font-size: 1rem;
-  }
-}
-
-@media screen and (max-width: 960px) {
-  .navbar-logo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translate(25%, 50%);
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .navbar-logo {
-    font-size: 1.5rem;
-    margin-left: 10px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .navbar-logo {
-    transform: translate(20%, 45%);
-    font-size: 1.2rem;
-  }
-}

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/2.png';
 import './Logo.css';
+import logo from '../assets/2.png';
 
-function Logo({ onClick }) {
+function Logo() {
   return (
-    <Link to='/' className='navbar-logo' onClick={onClick}>
-      <img className="logo" src={logo} width={70} height={70} alt="Nova Stella" />
-      NOVA STELLA
-      <i className='fab fa-typo3' />
+    <Link to='/' className='logo-link'>
+      <div className='logo-container'>
+        <img src={logo} alt='Nova Stella Logo' className='logo-image' />
+      </div>
     </Link>
   );
 }
