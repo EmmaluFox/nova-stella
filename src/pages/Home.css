@@ -85,6 +85,32 @@
   letter-spacing: 2px;
 }
 
+.next-event-info {
+  margin-bottom: 1.5rem;
+  padding: 1rem 0;
+  border-left: 3px solid #ffffff;
+  padding-left: 1rem;
+}
+
+.next-event-info h3 {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.event-speaker-name {
+  font-size: 1.2rem;
+  color: #ffffff;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.event-details {
+  font-size: 1rem;
+  color: #999999;
+}
+
 .section-content p {
   font-size: 1.2rem;
   line-height: 1.8;

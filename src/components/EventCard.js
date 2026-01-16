@@ -17,6 +17,11 @@ function EventCard({ event, buttonText = 'Info & Booking', showBadge = false }) 
         )}
         <p className='event-date'>{event.date}, {event.time}</p>
         <p className='event-location'>{event.location}</p>
+        {event.blurb && (
+          <div className='event-info'>
+            <p className='event-info-text'>{event.blurb}</p>
+          </div>
+        )}
         <a href={event.link || '#'} className='event-button'>
           {event.status === 'sold-out' ? 'Details' : buttonText}
         </a>

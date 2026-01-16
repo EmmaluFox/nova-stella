@@ -81,6 +81,23 @@
   margin-bottom: 1.5rem;
 }
 
+.event-info {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #1a1a1a;
+  border-left: 3px solid #ffffff;
+  border-radius: 4px;
+}
+
+.event-info-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cccccc;
+  margin: 0;
+  white-space: pre-line;
+  text-align: left;
+}
+
 .event-button {
   display: inline-block;
   padding: 0.7rem 1.5rem;

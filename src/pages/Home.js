@@ -1,7 +1,32 @@
 import React from 'react';
 import './Home.css';
+import eventsData from '../events/events.json';
 
 function Home() {
+  // Get the first upcoming event for the Classes & Events section
+  let firstEvent = null;
+  let eventImage = null;
+  
+  if (eventsData && eventsData.length > 0) {
+    const event = eventsData[0];
+    firstEvent = {
+      title: event['Talk Title'],
+      speaker: event['Speaker'],
+      date: event['Date'],
+      venue: event['Venue'],
+      city: event['City']
+    };
+    
+    // Try to load speaker image
+    if (event['Speaker']) {
+      try {
+        eventImage = require(`../assets/Speaker Photos/Square/${event['Speaker']} Square.jpg`);
+      } catch (err) {
+        console.log(`Image not found for ${event['Speaker']}`);
+      }
+    }
+  }
+
   return (
     <div className='home-page'>
       {/* Hero Banner */}
@@ -17,10 +42,17 @@ function Home() {
         {/* Section 1 */}
         <div className='home-section'>
           <div className='section-image'>
-            {/* Add your image here */}
+            {eventImage && <img src={eventImage} alt={firstEvent?.speaker} />}
           </div>
           <div className='section-content'>
             <h2>CLASSES & EVENTS</h2>
+            {firstEvent && (
+              <div className='next-event-info'>
+                <h3>{firstEvent.title}</h3>
+                <p className='event-speaker-name'>{firstEvent.speaker}</p>
+                <p className='event-details'>{firstEvent.date} • {firstEvent.venue}, {firstEvent.city}</p>
+              </div>
+            )}
             <p>Regular online lectures and workshops, pre-recorded and live.</p>
             <a href='/upcoming-talks' className='section-link'>Learn More →</a>
           </div>
