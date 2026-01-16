@@ -28,7 +28,7 @@ function Navbar() {
         {/* Desktop Navigation */}
         <ul className='nav-menu desktop-nav'>
           <li className='nav-item'>
-            <Link to='/' className='nav-link'>
+            <Link to='/about' className='nav-link'>
               About
             </Link>
           </li>
@@ -54,6 +54,11 @@ function Navbar() {
           <ul className='nav-menu mobile-nav'>
             <li className='nav-item'>
               <Link to='/' className='nav-link' onClick={closeMenu}>
+                Home
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link to='/about' className='nav-link' onClick={closeMenu}>
                 About
               </Link>
             </li>

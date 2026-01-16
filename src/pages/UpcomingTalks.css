@@ -1,0 +1,23 @@
+.upcoming-talks-page {
+  min-height: 100vh;
+  background-color: #000000;
+  padding: 2rem;
+}
+
+.upcoming-talks-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #ffffff;
+}
+
+.upcoming-talks-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.upcoming-talks-container p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #cccccc;
+}
