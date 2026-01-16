@@ -1,31 +1,44 @@
 import React from 'react';
 import './PastEvents.css';
+import EventCard from '../components/EventCard';
+import eventsData from '../events/events.json';
 
 function PastEvents() {
-  // Sample past events data - replace with your actual events
-  const pastEvents = [
-    {
-      id: 1,
-      title: 'Past Event 1',
-      date: '10 Dec 2025',
-      time: '19:00 – 21:00',
-      location: 'Online'
-    },
-    {
-      id: 2,
-      title: 'Past Event 2',
-      date: '15 Dec 2025',
-      time: '19:00 – 21:30',
-      location: 'In-Person'
-    },
-    {
-      id: 3,
-      title: 'Past Event 3',
-      date: '20 Dec 2025',
-      time: '13:00 – 15:10',
-      location: 'Online'
-    }
-  ];
+  // Filter for past events (dates before today)
+  // For now, showing empty as we only have future events in JSON
+  // You can add past events to the JSON or create a separate past-events.json
+  const today = new Date();
+  
+  const pastEvents = eventsData
+    .filter(event => {
+      const eventDate = new Date(event['Date']);
+      return eventDate < today;
+    })
+    .map((event, index) => {
+      let speakerImage = null;
+      
+      // Try to import speaker image if speaker name exists
+      if (event['Speaker']) {
+        try {
+          speakerImage = require(`../assets/Speaker Photos/${event['Speaker']}.jpeg`);
+        } catch (err) {
+          // Image not found, will use default gradient background
+          console.log(`Image not found for ${event['Speaker']}`);
+        }
+      }
+      
+      return {
+        id: event['Event ID'] || index,
+        title: event['Talk Title'],
+        date: event['Date'],
+        time: `${event['Start Time']} – ${event['End Time']}`,
+        location: `${event['Venue']}, ${event['City']}`,
+        speaker: event['Speaker'],
+        blurb: event['Talk Blurb'],
+        link: event['Online Eventbrite Link'],
+        image: speakerImage
+      };
+    });
 
   return (
     <div className='past-events-page'>
@@ -35,21 +48,22 @@ function PastEvents() {
       </div>
 
       <div className='events-container'>
-        <div className='events-grid'>
-          {pastEvents.map(event => (
-            <div key={event.id} className='event-card'>
-              <div className='event-image'>
-                {/* Add event image here */}
-              </div>
-              <div className='event-content'>
-                <h3 className='event-title'>{event.title}</h3>
-                <p className='event-date'>{event.date}, {event.time}</p>
-                <p className='event-location'>{event.location}</p>
-                <a href='#' className='event-button'>View Recording</a>
-              </div>
-            </div>
-          ))}
-        </div>
+        {pastEvents.length > 0 ? (
+          <div className='events-grid'>
+            {pastEvents.map(event => (
+              <EventCard 
+                key={event.id} 
+                event={event} 
+                buttonText='View Recording'
+                showBadge={false}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className='no-events'>
+            <p>No past events to display yet. Check back soon!</p>
+          </div>
+        )}
       </div>
     </div>
   );
