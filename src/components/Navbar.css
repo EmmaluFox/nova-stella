@@ -11,7 +11,7 @@
   height: 120px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -21,7 +21,7 @@
 .navbar-container {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
   height: 100%;
   padding: 0 20px;
@@ -33,7 +33,7 @@
 .navbar-title {
   color: #ffffff;
   font-family: 'BubblerOne', 'Space Grotesk', serif;
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 900;
   margin: 0;
   letter-spacing: 2px;
@@ -49,7 +49,8 @@
 
 .nav-menu.desktop-nav {
   display: flex;
-  gap: 30px;
+  flex: 1;
+  justify-content: space-evenly;
   margin-left: auto;
 }
 
@@ -90,19 +91,24 @@
   }
 
   .navbar-title {
-    font-size: 2.5rem;
+    font-size: 3rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .navbar-container {
     position: relative;
+    justify-content: flex-start;
+  }
+
+  .logo-wrapper {
+    position: relative;
+    z-index: 10;
   }
 
   .nav-menu.desktop-nav {
     display: none;
-  }
-
-  .logo-wrapper {
-    cursor: pointer;
   }
 
   .nav-menu.mobile-nav {
@@ -142,6 +148,9 @@
   .navbar-title {
     font-size: 1.8rem;
     letter-spacing: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .mobile-menu-icon {
