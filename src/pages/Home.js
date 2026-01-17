@@ -50,7 +50,7 @@ function Home() {
                 <div className='section-image-mobile'>
                   {eventImage && <img src={eventImage} alt={firstEvent?.speaker} />}
                 </div>
-                <p className='section-description'>Regular online lectures and workshops, pre-recorded and live.</p>
+                <p className='section-description'></p>
                 <a href='/upcoming-talks' className='section-link'>Learn More →</a>
               </div>
             </div>
