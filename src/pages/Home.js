@@ -9,12 +9,28 @@ function Home() {
   
   if (eventsData && eventsData.length > 0) {
     const event = eventsData[0];
+    
+    // Parse UK format date (DD/MM/YY)
+    const dateParts = event['Date'].split('/');
+    const day = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10) - 1; // Month is 0-indexed
+    const year = parseInt(dateParts[2], 10) + 2000; // Convert YY to YYYY
+    const eventDate = new Date(year, month, day);
+    
+    const formattedDate = eventDate.toLocaleDateString('en-GB', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    
     firstEvent = {
       title: event['Talk Title'],
       speaker: event['Speaker'],
-      date: event['Date'],
+      date: formattedDate,
       venue: event['Venue'],
-      city: event['City']
+      city: event['City'],
+      postcode: event['Postcode']
     };
     
     // Try to load speaker image
@@ -44,7 +60,7 @@ function Home() {
                   <div className='next-event-info'>
                     <h3>{firstEvent.title}</h3>
                     <p className='event-speaker-name'>{firstEvent.speaker}</p>
-                    <p className='event-details'>{firstEvent.date} • {firstEvent.venue}, {firstEvent.city}</p>
+                    <p className='event-details'>{firstEvent.date} • {firstEvent.venue}, {firstEvent.city}, {firstEvent.postcode}</p>
                   </div>
                 )}
                 <p className='section-description'></p>
