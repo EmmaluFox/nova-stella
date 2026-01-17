@@ -48,11 +48,11 @@ function Home() {
                   </div>
                 )}
                 <p className='section-description'></p>
+                <a href='/upcoming-talks' className='section-link'>Learn More →</a>
               </div>
               <div className='section-image-mobile'>
                 {eventImage && <img src={eventImage} alt={firstEvent?.speaker} />}
               </div>
-              <a href='/upcoming-talks' className='section-link'>Learn More →</a>
             </div>
           </div>
         </div>
@@ -67,8 +67,8 @@ function Home() {
               </div>
               <div className='section-content'>
                 <p>Explore our archive of past talks and events.</p>
+                <a href='/past-events' className='section-link'>View Archive →</a>
               </div>
-              <a href='/past-events' className='section-link'>View Archive →</a>
             </div>
           </div>
         </div>
@@ -83,8 +83,8 @@ function Home() {
               </div>
               <div className='section-content'>
                 <p className='section-description'>Join our inner circle and get exclusive access to our bank of recorded lectures, event discounts and other treats.</p>
+                <a href='/community' className='section-link'>Join Now →</a>
               </div>
-              <a href='/community' className='section-link'>Join Now →</a>
             </div>
           </div>
         </div>
@@ -99,8 +99,8 @@ function Home() {
               </div>
               <div className='section-content'>
                 <p className='section-description'>Learn more about Nova Stella and our mission.</p>
+                <a href='/about' className='section-link'>Discover More →</a>
               </div>
-              <a href='/about' className='section-link'>Discover More →</a>
             </div>
           </div>
         </div>
