@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Event Cards (Dynamic) - Elementor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Scoped styles */
+    .ns-eventcard-grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+    .ns-eventcard-grid .event-card { width:320px; box-sizing:border-box; }
+    .ns-eventcard .event-card { background-color:#0a0a0a; border-radius:8px; overflow:hidden; transition:transform .3s,box-shadow .3s; border:1px solid #1a1a1a; font-family:'Space Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,Arial; }
+    .ns-eventcard .event-image{min-height:160px;background:#1a1a1a;display:flex;align-items:center;justify-content:center}
+    .ns-eventcard .event-image img{width:100%;height:auto;object-fit:cover}
+    .ns-eventcard .event-content{padding:1rem;color:#fff}
+    .ns-eventcard .event-badge{display:inline-block;padding:.25rem .6rem;background:#ff4444;color:#fff;font-weight:600;border-radius:4px;margin-bottom:.5rem;text-transform:uppercase}
+    .ns-eventcard .event-badge.sold-out{background:#666}
+    .ns-eventcard .event-title{font-size:1.1rem;margin:.4rem 0;font-weight:600}
+    .ns-eventcard .event-speaker{font-size:.95rem;color:#fff;margin-bottom:.25rem}
+    .ns-eventcard .event-date,.ns-eventcard .event-location{font-size:.9rem;color:#ccc;margin-bottom:.25rem}
+    .ns-eventcard .event-info{font-size:.9rem;color:#ccc;margin:.6rem 0;padding:.6rem;background:#111;border-left:3px solid #fff;border-radius:4px}
+    .ns-eventcard .event-button{display:inline-block;padding:.5rem 1rem;background:#fff;color:#000;border-radius:4px;text-decoration:none;font-weight:600}
+    @media (max-width:640px){ .ns-eventcard-grid{flex-direction:column;align-items:center} .ns-eventcard-grid .event-card{width:92%} }
+  </style>
+</head>
+<body>
+
+<div class="ns-eventcard">
+  <!-- Container where cards will be rendered -->
+  <div id="ns-event-grid" class="ns-eventcard-grid"></div>
+
+  <!-- Template for an event card -->
+  <template id="ns-event-template">
+    <div class="event-card">
+      <div class="event-image">
+        <img src="" alt="Event image">
+      </div>
+      <div class="event-content">
+        <span class="event-badge" aria-hidden="true"></span>
+        <h3 class="event-title"></h3>
+        <div class="event-speaker"></div>
+        <div class="event-date"></div>
+        <div class="event-location"></div>
+        <div class="event-info"></div>
+        <a class="event-button" href="#">Info & Booking</a>
+      </div>
+    </div>
+  </template>
+
+  <!-- Inline JSON data: replace this with your dynamic data or ACF output -->
+  <script type="application/json" id="ns-event-data">
+  [
+    {
+      "title": "Grandmother Winter's House of Healing : A Trance Journey for Witches",
+      "speaker": "Sara Mastros",
+      "date": "26 January 2026, 19:00",
+      "location": "The Angel, London",
+      "blurb": "",
+      "image": "https://via.placeholder.com/800x420.png?text=Event+1",
+      "link": "#",
+      "status": "sold-out"
+    },
+    {
+      "title": "Galaxies & You",
+      "speaker": "Prof. Aurora",
+      "date": "22 March 2026, 18:30",
+      "location": "Observatory Theatre",
+      "blurb": "A practical guide to observing galaxies with small telescopes.",
+      "image": "https://via.placeholder.com/800x420.png?text=Event+2",
+      "link": "#",
+      "status": "available"
+    }
+  ]
+  </script>
+
+  <!-- Small script to render cards from JSON; Elementor may strip scripts in some contexts -->
+  <script>
+    (function(){
+      function render() {
+        var dataEl = document.getElementById('ns-event-data');
+        if(!dataEl) return;
+        try{
+          var events = JSON.parse(dataEl.textContent || '[]');
+        }catch(e){ console.error('Invalid event JSON', e); return; }
+        var tpl = document.getElementById('ns-event-template');
+        var grid = document.getElementById('ns-event-grid');
+        if(!tpl || !grid) return;
+        events.forEach(function(ev){
+          var node = tpl.content.cloneNode(true);
+          var img = node.querySelector('.event-image img'); if(img) img.src = ev.image || '';
+          var badge = node.querySelector('.event-badge'); if(badge){ badge.textContent = ev.status === 'sold-out' ? 'Sold Out' : ''; if(ev.status!=='sold-out') badge.style.display='none'; }
+          var title = node.querySelector('.event-title'); if(title) title.textContent = ev.title || '';
+          var speaker = node.querySelector('.event-speaker'); if(speaker) speaker.textContent = ev.speaker || '';
+          var date = node.querySelector('.event-date'); if(date) date.textContent = ev.date || '';
+          var loc = node.querySelector('.event-location'); if(loc) loc.textContent = ev.location || '';
+          var info = node.querySelector('.event-info'); if(info) info.textContent = ev.blurb || '';
+          var a = node.querySelector('.event-button'); if(a) a.href = ev.link || '#';
+          grid.appendChild(node);
+        });
+      }
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', render); else render();
+    })();
+  </script>
+
+</div>
+
+</body>
+</html>

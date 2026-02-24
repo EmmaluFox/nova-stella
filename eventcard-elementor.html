@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Event Card - Elementor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Scoped styles: wrap the card in .ns-eventcard to avoid theme collisions */
+    .ns-eventcard .event-card {
+      background-color: #0a0a0a;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid #1a1a1a;
+      width: 100%;
+      max-width: 800px;
+      box-sizing: border-box;
+      margin: 0 auto;
+      font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    .ns-eventcard .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255,255,255,0.06);
+    }
+
+    .ns-eventcard .event-image {
+      width: 100%;
+      min-height: 200px;
+      background-color: #1a1a1a;
+      background-image: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ns-eventcard .event-image img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .ns-eventcard .event-content {
+      padding: 1.5rem;
+      color: #ffffff;
+      position: relative;
+    }
+
+    .ns-eventcard .event-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      background-color: #ff4444;
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ns-eventcard .event-badge.sold-out { background-color: #666666; }
+
+    .ns-eventcard .event-title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #ffffff;
+    }
+
+    .ns-eventcard .event-speaker { font-size: 1rem; color: #ffffff; font-weight: 500; margin-bottom: 0.5rem; }
+    .ns-eventcard .event-date { font-size: 1rem; color: #cccccc; margin-bottom: 0.5rem; }
+    .ns-eventcard .event-location { font-size: 0.95rem; color: #999999; margin-bottom: 1.5rem; }
+
+    .ns-eventcard .event-info { margin-bottom: 1.5rem; padding: 1rem; background-color: #1a1a1a; border-left: 3px solid #ffffff; border-radius: 4px; }
+    .ns-eventcard .event-info-text { font-size: 0.95rem; line-height: 1.6; color: #cccccc; margin: 0; white-space: pre-line; text-align: left; }
+
+    .ns-eventcard .event-button { display: inline-block; padding: 0.7rem 1.5rem; background-color: #ffffff; color: #000000; text-decoration: none; font-weight: 600; border-radius: 4px; transition: background-color 0.3s ease; }
+    .ns-eventcard .event-button:hover { background-color: #cccccc; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .ns-eventcard .event-title { font-size: 1.05rem; }
+      .ns-eventcard .event-content { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ns-eventcard">
+
+  <!-- Example Event Card - copy this whole <div class="event-card"> block into an Elementor HTML widget -->
+  <div class="event-card">
+    <div class="event-image">
+      <img src="https://via.placeholder.com/1200x600.png?text=Event+Image" alt="Event image">
+    </div>
+    <div class="event-content">
+      <span class="event-badge sold-out" aria-hidden="true">Sold Out</span>
+      <h3 class="event-title">The Science of Stars: An Evening with Dr. Nova</h3>
+      <p class="event-speaker">Dr. Nova Stella</p>
+      <p class="event-date">12 March 2026, 19:00</p>
+      <p class="event-location">Stellar Hall, London</p>
+      <div class="event-info">
+        <p class="event-info-text">Join Dr. Nova Stella for an illustrated talk about recent discoveries in stellar evolution. Tickets include a Q&amp;A and refreshments.</p>
+      </div>
+      <a href="#" class="event-button">Info &amp; Booking</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
