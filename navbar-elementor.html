@@ -39,20 +39,7 @@
       position: relative !important;
       box-sizing: border-box !important;
     }
-
-    .ns-logo-wrapper {
-      cursor: pointer !important;
-      display: flex !important;
-      align-items: center !important;
-      margin-left: -15px !important;
-      flex-shrink: 0 !important;
-    }
-
-    .ns-logo-container {
-      padding: 0.25rem !important;
-      line-height: 0 !important;
-    }
-
+    
     .ns-logo-image {
       height: 100px !important;
       width: auto !important;
@@ -72,23 +59,7 @@
       white-space: nowrap !important;
       line-height: 1 !important;
     }
-    
-    .ns-hamburger {
-      display: none !important;
-      flex-direction: column !important;
-      justify-content: space-around !important;
-      width: 30px !important;
-      height: 24px !important;
-      cursor: pointer !important;
-      padding: 0 !important;
-      margin-left: auto !important;
-      z-index: 10000 !important;
-      position: relative !important;
-      pointer-events: auto !important;
-      background: transparent !important;
-      border: none !important;
-    }
-    
+
     .ns-hamburger span {
       width: 100% !important;
       height: 3px !important;
@@ -97,17 +68,42 @@
       display: block !important;
     }
     
-    .ns-hamburger.active span:nth-child(1) {
+    /* base styles so the hamburger label has visible size and is clickable */
+    .ns-hamburger {
+      display: none !important;
+      width: 42px !important;
+      height: 30px !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      gap: 6px !important;
+      align-items: center !important;
+      cursor: pointer !important;
+      padding: 6px !important;
+      margin-left: auto !important;
+      background: transparent !important;
+      border: none !important;
+      box-sizing: content-box !important;
+      z-index: 10000 !important;
+    }
+    
+    /* CSS-only hamburger toggle using hidden checkbox placed before the nav */
+    #ns-toggle {
+      display: none !important;
+    }
+
+    #ns-toggle:checked ~ .ns-navbar .ns-hamburger span:nth-child(1) {
       transform: rotate(45deg) translate(8px, 8px) !important;
     }
-    
-    .ns-hamburger.active span:nth-child(2) {
+
+    #ns-toggle:checked ~ .ns-navbar .ns-hamburger span:nth-child(2) {
       opacity: 0 !important;
     }
-    
-    .ns-hamburger.active span:nth-child(3) {
+
+    #ns-toggle:checked ~ .ns-navbar .ns-hamburger span:nth-child(3) {
       transform: rotate(-45deg) translate(7px, -7px) !important;
     }
+
+    /* When checkbox is checked, show mobile nav (moved below to override default) */
 
     .ns-nav-menu {
       list-style: none !important;
@@ -187,6 +183,11 @@
       border-bottom: none !important;
     }
 
+    /* When checkbox is checked, show mobile nav (ensure we target the mobile nav inside the navbar) */
+    #ns-toggle:checked ~ .ns-navbar .ns-mobile-nav {
+      display: flex !important;
+    }
+
     @media screen and (max-width: 768px) {
       .ns-navbar {
         height: 100px !important;
@@ -253,6 +254,8 @@
 </head>
 <body>
 
+<!-- hidden checkbox moved before nav for broader CSS scope -->
+<input type="checkbox" id="ns-toggle" />
 <nav class="ns-navbar">
   <div class="ns-navbar-container">
     <div class="ns-logo-wrapper">
@@ -261,12 +264,14 @@
       </a>
     </div>
     <h1 class="ns-navbar-title">NOVA STELLA</h1>
-    
-    <div class="ns-hamburger" id="hamburger">
+
+    <!-- CSS-only hamburger: hidden checkbox + label -->
+    <!-- hamburger label (checkbox moved before nav for Elementor compatibility) -->
+    <label for="ns-toggle" class="ns-hamburger" aria-label="Toggle navigation">
       <span></span>
       <span></span>
       <span></span>
-    </div>
+    </label>
     
     <ul class="ns-nav-menu ns-desktop-nav">
       <li class="ns-nav-item">
@@ -285,9 +290,6 @@
 
     <ul class="ns-nav-menu ns-mobile-nav" id="mobileNav">
       <li class="ns-nav-item">
-        <a href="/" class="ns-nav-link">Home</a>
-      </li>
-      <li class="ns-nav-item">
         <a href="/about" class="ns-nav-link">About</a>
       </li>
       <li class="ns-nav-item">
@@ -303,62 +305,7 @@
   </div>
 </nav>
 
-<script>
-  (function() {
-    'use strict';
-    
-    function initNavbar() {
-      var hamburger = document.getElementById('hamburger');
-      var mobileNav = document.getElementById('mobileNav');
-      
-      if (!hamburger || !mobileNav) {
-        setTimeout(initNavbar, 100);
-        return;
-      }
-      
-      hamburger.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (window.innerWidth <= 768) {
-          mobileNav.classList.toggle('active');
-          hamburger.classList.toggle('active');
-        }
-      });
-      
-      hamburger.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (window.innerWidth <= 768) {
-          mobileNav.classList.toggle('active');
-          hamburger.classList.toggle('active');
-        }
-      });
-
-      document.addEventListener('click', function(event) {
-        var navbar = document.querySelector('.ns-navbar');
-        
-        if (navbar && !navbar.contains(event.target) && mobileNav.classList.contains('active')) {
-          mobileNav.classList.remove('active');
-          hamburger.classList.remove('active');
-        }
-      });
-      
-      var links = mobileNav.querySelectorAll('.ns-nav-link');
-      for (var i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', function() {
-          mobileNav.classList.remove('active');
-          hamburger.classList.remove('active');
-        });
-      }
-    }
-    
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initNavbar);
-    } else {
-      initNavbar();
-    }
-  })();
-</script>
+<!-- CSS-only hamburger; no script required for Elementor -->
 
 </body>
 </html>
