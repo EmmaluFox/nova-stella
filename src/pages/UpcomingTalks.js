@@ -28,7 +28,8 @@ function UpcomingTalks() {
       speaker: event['Speaker'],
       blurb: event['Talk Blurb'],
       link: event['In Person Eventbrite Link'],
-      image: speakerImage
+      // Prefer an explicit event image from the data file, fall back to speaker photo
+      image: event['Image'] || speakerImage
     };
   });
 
