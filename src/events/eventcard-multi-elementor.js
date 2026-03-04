@@ -148,6 +148,16 @@
             if(tb === null) return -1;
             return tb - ta;
           });
+          // Keep only events happening today or in the future
+          (function(){
+            var now = new Date();
+            now.setHours(0,0,0,0);
+            var minTs = now.getTime();
+            data = data.filter(function(ev){
+              var t = parseEvDate(ev);
+              return t !== null && t >= minTs;
+            });
+          })();
         }
         renderEvents(data);
       })

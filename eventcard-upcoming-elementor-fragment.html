@@ -112,7 +112,14 @@
 
           var info = node.querySelector('.event-info');
           var blurb = ev['Talk Blurb'] || ev['Talk Blurb'] || ev['TalkBlurb'] || ev['blurb'] || '';
-          if(info) info.textContent = blurb;
+          if(info){
+            var parts = String(blurb).split(/\r?\n+/).map(function(t){
+              return t.trim();
+            }).filter(Boolean);
+            info.innerHTML = parts.map(function(t){
+              return '<p>' + t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
+            }).join('');
+          }
 
           var a = node.querySelector('.event-button');
           var inPerson = ev['In Person Eventbrite Link'] || ev['In Person Eventbrite'] || '';
@@ -199,13 +206,22 @@
                 return dt ? dt.getTime() : null;
               }
 
+              var now = new Date();
+              now.setHours(0, 0, 0, 0);
+              var nowMs = now.getTime();
+
+              data = data.filter(function(ev){
+                var t = parseEvDate(ev);
+                return t !== null && t >= nowMs;
+              });
+
               data.sort(function(a,b){
                 var ta = parseEvDate(a);
                 var tb = parseEvDate(b);
                 if(ta === null && tb === null) return 0;
                 if(ta === null) return 1;
                 if(tb === null) return -1;
-                return tb - ta; // descending: newest first
+                return ta - tb; // ascending: soonest first
               });
             }
             renderEvents(data);
