@@ -11,16 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function ns_eventcards_enqueue(){
-    // Prefer plugin-bundled script; fall back to uploads URL if file missing
-    $handle = 'ns-eventcards';
-    $src_local = plugin_dir_url(__FILE__) . 'eventcard-multi-elementor.js';
-    $src_uploads = 'https://novastella.co.uk/wp-content/uploads/2026/03/eventcard-multi-elementor.js';
-
-    if ( file_exists( plugin_dir_path(__FILE__) . 'eventcard-multi-elementor.js' ) ) {
-        wp_enqueue_script( $handle, $src_local, array(), null, true );
-    } else {
-        wp_enqueue_script( $handle, $src_uploads, array(), null, true );
-    }
+    // Canonical source lives in uploads
+    wp_enqueue_script(
+        'ns-eventcards',
+        'https://novastella.co.uk/wp-content/uploads/2026/03/eventcard-multi-elementor.js',
+        array(),
+        null,
+        true
+    );
 }
 add_action('wp_enqueue_scripts','ns_eventcards_enqueue');
 
