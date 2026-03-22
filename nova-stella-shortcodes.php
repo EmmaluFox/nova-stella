@@ -1,0 +1,363 @@
+<?php
+/**
+ * Nova Stella Shortcodes
+ * 
+ * Add this to your theme's functions.php or create as a must-use plugin
+ * Usage: [nova_past_events]
+ */
+
+function nova_stella_past_events_shortcode() {
+    ob_start();
+    ?>
+    <div class="ns-eventcard">
+      <!-- Container where cards will be rendered -->
+      <div id="ns-event-grid" class="ns-eventcard-grid" data-src="https://novastella.co.uk/wp-content/uploads/2026/03/data.json"></div>
+
+      <!-- Template for an event card -->
+      <template id="ns-event-template">
+        <div class="event-card">
+          <div class="event-image">
+            <img src="" alt="Event image">
+          </div>
+          <div class="event-content">
+            <span class="event-badge" aria-hidden="true"></span>
+            <h3 class="event-title"></h3>
+            <div class="event-speaker"></div>
+            <div class="event-date"></div>
+            <div class="event-location"></div>
+            <div class="event-info"></div>
+            <button class="event-info-toggle" type="button">More Information</button>
+          </div>
+          <div class="event-booking">
+            <div class="event-booking-title">Booking</div>
+            <div class="event-booking-buttons">
+              <a class="event-button event-button-inperson" href="#" target="_blank" rel="noopener noreferrer">In Person Tickets</a>
+              <a class="event-button event-button-online" href="#" target="_blank" rel="noopener noreferrer">Online Tickets</a>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <script>
+        (function(){
+          function parseDateValue(dateStr){
+            if(!dateStr) return null;
+            if(String(dateStr).indexOf('/') !== -1){
+              var parts = String(dateStr).trim().split('/');
+              if(parts.length >= 2){
+                var day = parseInt(parts[0],10);
+                var month = parseInt(parts[1],10) - 1;
+                var year = parts[2] ? parts[2].trim() : '';
+                if(year.length === 2) year = 2000 + parseInt(year,10);
+                else if(year.length === 0) year = new Date().getFullYear();
+                else year = parseInt(year,10);
+                if(!isNaN(day) && !isNaN(month) && !isNaN(year)){
+                  return new Date(year, month, day);
+                }
+              }
+              return null;
+            }
+            var p = Date.parse(dateStr);
+            return isNaN(p) ? null : new Date(p);
+          }
+
+          function daySuffix(day){
+            if(day >= 11 && day <= 13) return 'th';
+            var last = day % 10;
+            if(last === 1) return 'st';
+            if(last === 2) return 'nd';
+            if(last === 3) return 'rd';
+            return 'th';
+          }
+
+          function formatLongDate(dateObj){
+            if(!dateObj) return '';
+            var weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+            var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            var dayName = weekdays[dateObj.getDay()];
+            var dayNum = dateObj.getDate();
+            var monthName = months[dateObj.getMonth()];
+            var year = dateObj.getFullYear();
+            return dayName + ' ' + dayNum + daySuffix(dayNum) + ' of ' + monthName + ', ' + year;
+          }
+
+          function formatTime(timeStr){
+            if(!timeStr) return '';
+            var s = String(timeStr).trim();
+            var m = s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?\s*([APMapm]{2})?$/);
+            if(!m) return s;
+            var hh = parseInt(m[1], 10);
+            var mm = m[2];
+            var ampm = (m[3] || '').toUpperCase();
+
+            if(ampm === 'AM' || ampm === 'PM'){
+              if(hh === 0) hh = 12;
+              if(hh > 12) hh = hh % 12;
+              return hh + '.' + mm + ampm;
+            }
+
+            var suffix = hh >= 12 ? 'PM' : 'AM';
+            hh = hh % 12;
+            if(hh === 0) hh = 12;
+            return hh + '.' + mm + suffix;
+          }
+
+          function renderEvents(events){
+            var tpl = document.getElementById('ns-event-template');
+            var grid = document.getElementById('ns-event-grid');
+            if(!tpl || !grid || !Array.isArray(events)) return;
+            events.forEach(function(ev){
+              var node = tpl.content.cloneNode(true);
+              var cardEl = node.querySelector('.event-card');
+              var img = node.querySelector('.event-image img');
+              var imgSrc = ev['Image'] || ev['image'] || ev.image || '';
+              if(img) img.src = imgSrc;
+
+              var badge = node.querySelector('.event-badge');
+              var status = ev['Status'] || ev['status'] || '';
+              if(badge){
+                if(String(status).toLowerCase() === 'sold-out' || String(status).toLowerCase() === 'sold out'){
+                  badge.textContent = 'Sold Out';
+                  badge.style.display = '';
+                } else {
+                  badge.textContent = '';
+                  badge.style.display = 'none';
+                }
+              }
+
+              var speakerEl = node.querySelector('.event-speaker');
+              var speakerName = ev['Speaker'] || ev['speaker'] || '';
+              var speakerWebsite = ev['Speaker Website'] || ev['Speaker Website'] || ev['Speaker Website'] || '';
+              var title = node.querySelector('.event-title');
+              var titleText = ev['Talk Title'] || ev['TalkTitle'] || ev['title'] || ev['Talk_Title'] || '';
+              var isTbcTitle = String(titleText).trim().toUpperCase() === 'TBC';
+              if(title) title.textContent = isTbcTitle ? speakerName : titleText;
+
+              if(speakerEl){
+                if(isTbcTitle){
+                  speakerEl.textContent = '';
+                  speakerEl.style.display = 'none';
+                } else if(speakerWebsite){
+                  speakerEl.innerHTML = '<a href="' + (speakerWebsite.indexOf('http')===0?speakerWebsite:'https://'+speakerWebsite) + '" target="_blank" rel="noopener noreferrer">' + (speakerName || '') + '</a>';
+                } else {
+                  speakerEl.textContent = speakerName;
+                }
+              }
+
+              var dateEl = node.querySelector('.event-date');
+              var dateText = ev['Date'] || ev['date'] || '';
+              var startTime = ev['Start Time'] || ev['StartTime'] || ev['Start'] || '';
+              if(dateEl){
+                var parsedDate = parseDateValue(dateText);
+                var prettyDate = formatLongDate(parsedDate);
+                var prettyTime = formatTime(startTime);
+                dateEl.textContent = prettyTime ? ((prettyDate || dateText) + ' — ' + prettyTime) : (prettyDate || dateText);
+              }
+
+              var loc = node.querySelector('.event-location');
+              var venue = ev['Venue'] || ev['Venue Name'] || '';
+              var address = ev['Address'] || '';
+              var city = ev['City'] || '';
+              var postcode = ev['Postcode'] || ev['Postcode'] || '';
+              var locationText = '';
+              if(venue) locationText += venue;
+              if(address) locationText += (locationText? ', ' : '') + address;
+              if(city) locationText += (locationText? ', ' : '') + city;
+              if(postcode) locationText += (locationText? ', ' : '') + postcode;
+              if(loc) loc.textContent = locationText;
+
+              var info = node.querySelector('.event-info');
+              var infoToggle = node.querySelector('.event-info-toggle');
+              var blurb = ev['Talk Blurb'] || ev['Talk Blurb'] || ev['TalkBlurb'] || ev['blurb'] || '';
+              if(info){
+                var parts = String(blurb).split(/\r?\n+/).map(function(t){
+                  return t.trim();
+                }).filter(Boolean);
+                var fullText = parts.join('\n\n');
+                info.innerHTML = '';
+                var infoContent = document.createElement('div');
+                infoContent.className = 'event-info-content is-clamped';
+                infoContent.textContent = fullText;
+                info.appendChild(infoContent);
+
+                if(infoToggle && fullText){
+                  infoToggle.style.display = 'inline-block';
+                  infoToggle.addEventListener('click', function(){
+                    infoContent.classList.remove('is-clamped');
+                    infoToggle.style.display = 'none';
+                    if(cardEl) cardEl.classList.add('blurb-expanded');
+                  });
+                }
+              }
+
+              var bookingWrap = node.querySelector('.event-booking');
+              var inPersonBtn = node.querySelector('.event-button-inperson');
+              var onlineBtn = node.querySelector('.event-button-online');
+              var inPerson = ev['In Person Eventbrite Link'] || ev['In Person Eventbrite'] || '';
+              var online = ev['Online Eventbrite Link'] || ev['Online Eventbrite'] || '';
+              var hasBooking = false;
+
+              if(inPersonBtn){
+                if(inPerson){
+                  inPersonBtn.href = inPerson;
+                  inPersonBtn.style.display = 'inline-block';
+                  hasBooking = true;
+                } else {
+                  inPersonBtn.style.display = 'none';
+                }
+              }
+
+              if(onlineBtn){
+                if(online){
+                  onlineBtn.href = online;
+                  onlineBtn.style.display = 'inline-block';
+                  hasBooking = true;
+                } else {
+                  onlineBtn.style.display = 'none';
+                }
+              }
+
+              if(bookingWrap && !hasBooking){
+                bookingWrap.style.display = 'none';
+              }
+
+              grid.appendChild(node);
+            });
+          }
+
+          function loadData(){
+            var grid = document.getElementById('ns-event-grid');
+            var attrUrl = grid && grid.getAttribute('data-src');
+            var url = window.NS_EVENT_DATA_URL || attrUrl || '/wp-content/uploads/data.json';
+            var restUrl = '/wp-json/custom/v1/data';
+
+            function fetchJson(u){
+              return fetch(u, {cache: 'no-store'}).then(function(res){
+                if(!res.ok) {
+                  var err = new Error('HTTP ' + res.status);
+                  err.status = res.status;
+                  throw err;
+                }
+                return res.json();
+              });
+            }
+
+            fetchJson(url)
+              .catch(function(err){
+                if(err && (err.status === 403 || err.message.indexOf('HTTP 403') !== -1 || err.name === 'TypeError')){
+                  var cbUrl = url + (url.indexOf('?') === -1 ? '?_cb=' + Date.now() : '&_cb=' + Date.now());
+                  return fetchJson(cbUrl).catch(function(err2){
+                    if(err2 && (err2.status === 403 || (err2.message && err2.message.indexOf('HTTP 403') !== -1))) {
+                      return fetchJson(restUrl);
+                    }
+                    throw err2;
+                  });
+                }
+                throw err;
+              })
+              .then(function(data){
+                if(Array.isArray(data)){
+                  function parseEvDate(ev){
+                    var dateStr = ev['Date'] || ev['date'] || '';
+                    var timeStr = ev['Start Time'] || ev['StartTime'] || ev['Start'] || '';
+                    var dt = null;
+                    if(dateStr.indexOf('/') !== -1){
+                      var parts = dateStr.trim().split('/');
+                      if(parts.length >= 2){
+                        var day = parseInt(parts[0],10);
+                        var month = parseInt(parts[1],10) - 1;
+                        var year = parts[2] ? parts[2].trim() : '';
+                        if(year.length === 2) year = 2000 + parseInt(year,10);
+                        else if(year.length === 0) year = new Date().getFullYear();
+                        else year = parseInt(year,10);
+                        if(!isNaN(day) && !isNaN(month) && !isNaN(year)){
+                          dt = new Date(year, month, day);
+                        }
+                      }
+                    } else if(dateStr){
+                      var p = Date.parse(dateStr);
+                      if(!isNaN(p)) dt = new Date(p);
+                    }
+                    if(dt && timeStr){
+                      var m = timeStr.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([APMapm\.]*)/);
+                      if(m){
+                        var hh = parseInt(m[1],10);
+                        var mm = parseInt(m[2],10) || 0;
+                        var ss = m[3] ? parseInt(m[3],10) : 0;
+                        var ampm = (m[4] || '').toLowerCase();
+                        if(ampm.indexOf('p') !== -1 && hh < 12) hh += 12;
+                        if(ampm.indexOf('a') !== -1 && hh === 12) hh = 0;
+                        dt.setHours(hh, mm, ss, 0);
+                      } else {
+                        var m2 = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+                        if(m2) dt.setHours(parseInt(m2[1],10), parseInt(m2[2],10), 0, 0);
+                      }
+                    }
+                    return dt ? dt.getTime() : null;
+                  }
+
+                  var now = new Date();
+                  now.setHours(0, 0, 0, 0);
+                  var nowMs = now.getTime();
+
+                  data = data.filter(function(ev){
+                    var t = parseEvDate(ev);
+                    return t !== null && t < nowMs;
+                  });
+
+                  data.sort(function(a,b){
+                    var ta = parseEvDate(a);
+                    var tb = parseEvDate(b);
+                    if(ta === null && tb === null) return 0;
+                    if(ta === null) return 1;
+                    if(tb === null) return -1;
+                    return tb - ta; // descending: most recent first
+                  });
+                }
+                renderEvents(data);
+              })
+              .catch(function(err){
+                console.error('Failed to load event data from', url, err);
+              });
+          }
+
+          if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', loadData); else loadData();
+        })();
+      </script>
+
+      <style>
+        .ns-eventcard-grid { display:block; gap:20px; }
+        .ns-eventcard-grid .event-card { width:100%; max-width:980px; margin:0 auto 20px; box-sizing:border-box; }
+        .ns-eventcard .event-card { background-color:#0a0a0a; border-radius:8px; overflow:hidden; transition:transform .3s,box-shadow .3s; border:1px solid #1a1a1a; font-family:'Space Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,Arial; display:grid; grid-template-columns:50% 1fr; grid-template-rows:auto 1fr auto; gap:0; }
+        .ns-eventcard .event-image{grid-row:1 / 3;width:100%;min-height:250px;background:#1a1a1a;display:flex;align-items:center;justify-content:center}
+        .ns-eventcard .event-image img{width:100%;height:auto;object-fit:cover}
+        .ns-eventcard .event-content{grid-column:2;grid-row:1 / 3;padding:1rem;color:#fff;display:flex;flex-direction:column}
+        .ns-eventcard .event-booking{grid-column:1 / 3;grid-row:3;width:100%;padding:1rem;padding-top:0}
+        .ns-eventcard .event-badge.sold-out{background:#666}
+        .ns-eventcard .event-title{font-size:1.1rem;margin:.4rem 0;font-weight:600}
+        .ns-eventcard .event-speaker{font-size:.95rem;color:#fff;margin-bottom:.25rem}
+        .ns-eventcard .event-speaker a{color:#fff;text-decoration:none}
+        .ns-eventcard .event-speaker a:hover,
+        .ns-eventcard .event-speaker a:focus{color:#fff;text-decoration:underline}
+        .ns-eventcard .event-date,.ns-eventcard .event-location{font-size:.9rem;color:#ccc;margin-bottom:.25rem}
+        .ns-eventcard .event-info{font-size:.9rem;color:#ccc;margin:.6rem 0;padding:.6rem;background:#111;border-left:3px solid #fff;border-radius:4px}
+        .ns-eventcard .event-info-content{white-space:pre-line;line-height:1.45}
+        .ns-eventcard .event-info-content.is-clamped{display:-webkit-box;-webkit-box-orient:vertical;line-clamp:11;-webkit-line-clamp:11;overflow:hidden}
+        .ns-eventcard .event-info-toggle{display:none;margin-top:.35rem;padding:.35rem .7rem;background:transparent;border:1px solid #fff;color:#fff;border-radius:4px;font-weight:600;cursor:pointer}
+        .ns-eventcard .event-booking-title{font-size:.9rem;color:#fff;margin:.6rem 0 .4rem;font-weight:600;letter-spacing:.03em}
+        .ns-eventcard .event-booking-buttons{display:flex;gap:.5rem;flex-wrap:wrap}
+        .ns-eventcard .event-button{display:inline-block;padding:.5rem 1rem;background:#fff;color:#000;border-radius:4px;text-decoration:none;font-weight:600}
+        .ns-eventcard .event-badge{display:inline-block;padding:.25rem .6rem;background:#ff4444;color:#fff;font-weight:600;border-radius:4px;margin-bottom:.5rem;text-transform:uppercase}
+        @media (max-width:768px){ .ns-eventcard .event-card{grid-template-columns:1fr;grid-template-rows:auto auto auto;} .ns-eventcard .event-image{grid-row:1;grid-column:1;} .ns-eventcard .event-content{grid-column:1;grid-row:2;} .ns-eventcard .event-booking{grid-column:1;grid-row:3;} }
+        .ns-eventcard .event-card.blurb-expanded{grid-template-columns:1fr;grid-template-rows:auto auto auto;}
+        .ns-eventcard .event-card.blurb-expanded .event-image{grid-row:1;grid-column:1;width:40%;min-height:auto;margin:1rem auto 0;justify-self:center;}
+        .ns-eventcard .event-card.blurb-expanded .event-content{grid-column:1;grid-row:2;width:100%;}
+        .ns-eventcard .event-card.blurb-expanded .event-booking{grid-column:1;grid-row:3;}
+        @media (max-width:768px){ .ns-eventcard .event-card.blurb-expanded .event-image{width:100%;margin:0;} }
+      </style>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
+add_shortcode( 'nova_past_events', 'nova_stella_past_events_shortcode' );
