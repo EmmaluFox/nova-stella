@@ -65,7 +65,8 @@ function ns_eventcards_social_meta(){
     $url = ( is_singular() ? get_permalink() : home_url() );
 
     // Output meta tags (minimal set)
-    echo "\n<!-- NS Eventcards social meta -->\n";
+    // Avoid printing a leading newline to prevent accidental output before the DOCTYPE.
+    echo '<!-- NS Eventcards social meta -->';
     echo '<meta property="og:title" content="' . esc_attr( $og_title ) . '" />\n';
     if ( $desc ) echo '<meta property="og:description" content="' . esc_attr( $desc ) . '" />\n';
     echo '<meta property="og:image" content="' . esc_url( $image ) . '" />\n';
@@ -73,7 +74,7 @@ function ns_eventcards_social_meta(){
     echo '<meta property="og:type" content="website" />\n';
     echo '<meta name="twitter:card" content="summary_large_image" />\n';
     echo '<meta name="twitter:image" content="' . esc_url( $image ) . '" />\n';
-    echo "<!-- /NS Eventcards social meta -->\n";
+    echo '<!-- /NS Eventcards social meta -->';
 }
 add_action( 'wp_head', 'ns_eventcards_social_meta', 5 );
 
