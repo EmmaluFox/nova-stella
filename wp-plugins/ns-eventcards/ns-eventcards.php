@@ -40,9 +40,17 @@ add_action('wp_enqueue_scripts','ns_eventcards_enqueue_conditional');
 function ns_eventcards_social_meta(){
     // Change this URL if you ever want a different preview image
     $img = 'https://novastella.co.uk/wp-content/uploads/2026/03/Logo-Black-Background.svg';
+    // Title and description requested by site owner
+    $title = 'Nova Stella';
+    $desc = 'A series of live talks from key figures in the esoteric, pagan and magickal scene.';
     echo "\n<!-- NS Eventcards social meta -->\n";
+    echo '<meta property="og:title" content="' . esc_attr($title) . '" />\n';
+    echo '<meta property="og:description" content="' . esc_attr($desc) . '" />\n';
     echo '<meta property="og:image" content="' . esc_attr($img) . '" />\n';
-    echo '<meta name="twitter:image" content="' . esc_attr($img) . '" />\n';
+    echo '<meta property="og:type" content="website" />\n';
     echo '<meta name="twitter:card" content="summary_large_image" />\n';
+    echo '<meta name="twitter:title" content="' . esc_attr($title) . '" />\n';
+    echo '<meta name="twitter:description" content="' . esc_attr($desc) . '" />\n';
+    echo '<meta name="twitter:image" content="' . esc_attr($img) . '" />\n';
 }
 add_action('wp_head','ns_eventcards_social_meta', 5);
