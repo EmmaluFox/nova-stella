@@ -24,6 +24,59 @@ function ns_eventcards_enqueue(){
 }
 add_action('wp_enqueue_scripts','ns_eventcards_enqueue');
 
+/**
+ * Output basic Open Graph and Twitter Card meta tags using the WP custom logo
+ * Falls back to site icon or a hard-coded image if no logo is set.
+ */
+function ns_eventcards_social_meta(){
+    if ( is_admin() ) return;
+
+    // Title: prefer post title for singular, otherwise site name
+    if ( is_singular() ) {
+        $og_title = single_post_title('', false);
+    } else {
+        $og_title = get_bloginfo('name');
+    }
+
+    // Description: prefer excerpt for singular, otherwise site tagline
+    if ( is_singular() ) {
+        global $post;
+        setup_postdata( $post );
+        $desc = has_excerpt( $post ) ? get_the_excerpt( $post ) : ''; 
+        wp_reset_postdata();
+    } else {
+        $desc = get_bloginfo('description');
+    }
+
+    // Image: prefer theme custom logo, then site icon, then a sensible fallback
+    $image = '';
+    $logo_id = get_theme_mod('custom_logo');
+    if ( $logo_id ) {
+        $image = wp_get_attachment_image_url( $logo_id, 'full' );
+    }
+    if ( ! $image ) {
+        $site_icon = get_site_icon_url();
+        if ( $site_icon ) $image = $site_icon;
+    }
+    if ( ! $image ) {
+        $image = 'https://novastella.co.uk/wp-content/uploads/2026/03/Logo-Black-Background.png';
+    }
+
+    $url = ( is_singular() ? get_permalink() : home_url() );
+
+    // Output meta tags (minimal set)
+    echo "\n<!-- NS Eventcards social meta -->\n";
+    echo '<meta property="og:title" content="' . esc_attr( $og_title ) . '" />\n';
+    if ( $desc ) echo '<meta property="og:description" content="' . esc_attr( $desc ) . '" />\n';
+    echo '<meta property="og:image" content="' . esc_url( $image ) . '" />\n';
+    echo '<meta property="og:url" content="' . esc_url( $url ) . '" />\n';
+    echo '<meta property="og:type" content="website" />\n';
+    echo '<meta name="twitter:card" content="summary_large_image" />\n';
+    echo '<meta name="twitter:image" content="' . esc_url( $image ) . '" />\n';
+    echo "<!-- /NS Eventcards social meta -->\n";
+}
+add_action( 'wp_head', 'ns_eventcards_social_meta', 5 );
+
 // Optional: only load on the upcoming events page by slug
 /*
 function ns_eventcards_enqueue_conditional(){
@@ -31,26 +84,3 @@ function ns_eventcards_enqueue_conditional(){
 }
 add_action('wp_enqueue_scripts','ns_eventcards_enqueue_conditional');
 */
-
-/**
- * Optional social meta override — ensures a consistent share image.
- * This prints Open Graph and Twitter Card image tags using the logo you requested.
- * If you use an SEO plugin, it may override these; remove or disable this hook if so.
- */
-function ns_eventcards_social_meta(){
-    // Change this URL if you ever want a different preview image
-    $img = 'https://novastella.co.uk/wp-content/uploads/2026/03/Logo-Black-Background.svg';
-    // Title and description requested by site owner
-    $title = 'Nova Stella';
-    $desc = 'A series of live talks from key figures in the esoteric, pagan and magickal scene.';
-    echo "\n<!-- NS Eventcards social meta -->\n";
-    echo '<meta property="og:title" content="' . esc_attr($title) . '" />\n';
-    echo '<meta property="og:description" content="' . esc_attr($desc) . '" />\n';
-    echo '<meta property="og:image" content="' . esc_attr($img) . '" />\n';
-    echo '<meta property="og:type" content="website" />\n';
-    echo '<meta name="twitter:card" content="summary_large_image" />\n';
-    echo '<meta name="twitter:title" content="' . esc_attr($title) . '" />\n';
-    echo '<meta name="twitter:description" content="' . esc_attr($desc) . '" />\n';
-    echo '<meta name="twitter:image" content="' . esc_attr($img) . '" />\n';
-}
-add_action('wp_head','ns_eventcards_social_meta', 5);
