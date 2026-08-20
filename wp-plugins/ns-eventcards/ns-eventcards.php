@@ -31,3 +31,18 @@ function ns_eventcards_enqueue_conditional(){
 }
 add_action('wp_enqueue_scripts','ns_eventcards_enqueue_conditional');
 */
+
+/**
+ * Optional social meta override — ensures a consistent share image.
+ * This prints Open Graph and Twitter Card image tags using the logo you requested.
+ * If you use an SEO plugin, it may override these; remove or disable this hook if so.
+ */
+function ns_eventcards_social_meta(){
+    // Change this URL if you ever want a different preview image
+    $img = 'https://novastella.co.uk/wp-content/uploads/2026/03/Logo-Black-Background.svg';
+    echo "\n<!-- NS Eventcards social meta -->\n";
+    echo '<meta property="og:image" content="' . esc_attr($img) . '" />\n';
+    echo '<meta name="twitter:image" content="' . esc_attr($img) . '" />\n';
+    echo '<meta name="twitter:card" content="summary_large_image" />\n';
+}
+add_action('wp_head','ns_eventcards_social_meta', 5);
