@@ -26,11 +26,16 @@
     .ns-eventcard .event-info-content{white-space:pre-line;line-height:1.45}
     .ns-eventcard .event-info-content.is-clamped{display:-webkit-box;-webkit-box-orient:vertical;line-clamp:11;-webkit-line-clamp:11;overflow:hidden}
     .ns-eventcard .event-info-toggle{display:none;margin-top:.35rem;padding:.35rem .7rem;background:transparent;border:1px solid #fff;color:#fff;border-radius:4px;font-weight:600;cursor:pointer}
+    .ns-eventcard .event-booking{grid-column:1 / 3;grid-row:3;width:100%;padding:1rem;padding-top:0}
+    .ns-eventcard .event-booking-title{font-size:.9rem;color:#fff;margin:.6rem 0 .4rem;font-weight:600;letter-spacing:.03em}
+    .ns-eventcard .event-booking-buttons{display:flex;gap:.5rem;flex-wrap:wrap}
+    .ns-eventcard .event-button{display:inline-block;padding:.5rem 1rem;background:#fff;color:#000;border-radius:4px;text-decoration:none;font-weight:600}
     .ns-eventcard .event-badge{display:inline-block;padding:.25rem .6rem;background:#ff4444;color:#fff;font-weight:600;border-radius:4px;margin-bottom:.5rem;text-transform:uppercase}
-    @media (max-width:768px){ .ns-eventcard .event-card{grid-template-columns:1fr;grid-template-rows:auto auto;} .ns-eventcard .event-image{grid-row:1;grid-column:1;} .ns-eventcard .event-content{grid-column:1;grid-row:2;} }
-    .ns-eventcard .event-card.blurb-expanded{grid-template-columns:1fr;grid-template-rows:auto auto;}
+    @media (max-width:768px){ .ns-eventcard .event-card{grid-template-columns:1fr;grid-template-rows:auto auto auto;} .ns-eventcard .event-image{grid-row:1;grid-column:1;} .ns-eventcard .event-content{grid-column:1;grid-row:2;} .ns-eventcard .event-booking{grid-column:1;grid-row:3;} }
+    .ns-eventcard .event-card.blurb-expanded{grid-template-columns:1fr;grid-template-rows:auto auto auto;}
     .ns-eventcard .event-card.blurb-expanded .event-image{grid-row:1;grid-column:1;width:40%;min-height:auto;margin:1rem auto 0;justify-self:center;}
     .ns-eventcard .event-card.blurb-expanded .event-content{grid-column:1;grid-row:2;width:100%;}
+    .ns-eventcard .event-card.blurb-expanded .event-booking{grid-column:1;grid-row:3;}
     @media (max-width:768px){ .ns-eventcard .event-card.blurb-expanded .event-image{width:100%;margin:0;} }
   </style>
 </head>
@@ -38,7 +43,7 @@
 
 <div class="ns-eventcard">
   <!-- Container where cards will be rendered -->
-  <div id="ns-event-grid" class="ns-eventcard-grid" data-src="https://novastella.co.uk/wp-content/uploads/2026/03/data.json"></div>
+  <div id="ns-event-grid" class="ns-eventcard-grid" data-src=""></div>
 
   <!-- Template for an event card -->
   <template id="ns-event-template">
@@ -55,11 +60,18 @@
         <div class="event-info"></div>
         <button class="event-info-toggle" type="button">More Information</button>
       </div>
+      <div class="event-booking">
+        <div class="event-booking-title">Booking</div>
+        <div class="event-booking-buttons">
+          <a class="event-button event-button-inperson" href="#" target="_blank" rel="noopener noreferrer">In Person Tickets</a>
+          <a class="event-button event-button-online" href="#" target="_blank" rel="noopener noreferrer">Online Tickets</a>
+        </div>
+      </div>
     </div>
   </template>
 
-  <!-- Data is loaded from a JSON file in WordPress media instead of inline JSON.
-       Default path: /wp-content/uploads/data.json
+    <!-- Data is loaded from a JSON file in WordPress media instead of inline JSON.
+      Default path: current month URL (/uploads/YYYY/MM/data.json), then previous month.
        You can override by setting `window.NS_EVENT_DATA_URL` or adding `data-src="/full/path/to/data.json"` on `#ns-event-grid`.
   -->
   <script>
@@ -216,6 +228,37 @@
             }
           }
 
+          var bookingWrap = node.querySelector('.event-booking');
+          var inPersonBtn = node.querySelector('.event-button-inperson');
+          var onlineBtn = node.querySelector('.event-button-online');
+          var inPerson = ev['In Person Eventbrite Link'] || ev['In Person Eventbrite'] || '';
+          var online = ev['Online Eventbrite Link'] || ev['Online Eventbrite'] || '';
+          var hasBooking = false;
+
+          if(inPersonBtn){
+            if(inPerson){
+              inPersonBtn.href = inPerson;
+              inPersonBtn.style.display = 'inline-block';
+              hasBooking = true;
+            } else {
+              inPersonBtn.style.display = 'none';
+            }
+          }
+
+          if(onlineBtn){
+            if(online){
+              onlineBtn.href = online;
+              onlineBtn.style.display = 'inline-block';
+              hasBooking = true;
+            } else {
+              onlineBtn.style.display = 'none';
+            }
+          }
+
+          if(bookingWrap && !hasBooking){
+            bookingWrap.style.display = 'none';
+          }
+
           grid.appendChild(node);
         });
       }
@@ -223,7 +266,16 @@
       function loadData(){
         var grid = document.getElementById('ns-event-grid');
         var attrUrl = grid && grid.getAttribute('data-src');
-        var url = window.NS_EVENT_DATA_URL || attrUrl || '/wp-content/uploads/data.json';
+        function monthDataUrl(d){
+          var y = d.getFullYear();
+          var m = String(d.getMonth() + 1).padStart(2, '0');
+          return 'https://novastella.co.uk/wp-content/uploads/' + y + '/' + m + '/data.json';
+        }
+        var now = new Date();
+        var currentMonthUrl = monthDataUrl(now);
+        var prevMonthUrl = monthDataUrl(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+        var forcedUrl = window.NS_EVENT_DATA_URL || attrUrl;
+        var url = forcedUrl || currentMonthUrl;
         // If the url is relative and the site uses a different base, you can provide full media URL.
         var restUrl = '/wp-json/custom/v1/data';
 
@@ -238,20 +290,44 @@
           });
         }
 
-        fetchJson(url)
-          .catch(function(err){
-            // If static media access is forbidden (403) or other error, retry with cache-busting query
-            if(err && (err.status === 403 || err.message.indexOf('HTTP 403') !== -1 || err.name === 'TypeError')){
-              var cbUrl = url + (url.indexOf('?') === -1 ? '?_cb=' + Date.now() : '&_cb=' + Date.now());
-              return fetchJson(cbUrl).catch(function(err2){
-                // If cache-busted attempt also fails, fall back to REST endpoint
-                if(err2 && (err2.status === 403 || (err2.message && err2.message.indexOf('HTTP 403') !== -1))) {
-                  return fetchJson(restUrl);
-                }
-                throw err2;
-              });
-            }
-            throw err;
+        // Try a list of candidate month paths (current, previous, etc.) to find the media JSON.
+        function tryUrlsSequentially(urls){
+          var idx = 0;
+          function attempt(){
+            if(idx >= urls.length) return Promise.reject(new Error('No candidate URLs succeeded'));
+            var u = urls[idx++];
+            return fetchJson(u).catch(function(err){
+              // If we hit a 403 or network type error, try cache-bust for this URL once
+              if(err && (err.status === 403 || (err.message && err.message.indexOf('HTTP 403') !== -1) || err.name === 'TypeError')){
+                var cb = u + (u.indexOf('?') === -1 ? '?_cb=' + Date.now() : '&_cb=' + Date.now());
+                return fetchJson(cb).catch(function(){
+                  return attempt();
+                });
+              }
+              // Otherwise move on to next candidate
+              return attempt();
+            });
+          }
+          return attempt();
+        }
+
+        var candidates = [];
+        if(forcedUrl) {
+          candidates.push(forcedUrl);
+        } else if(attrUrl){
+          candidates.push(attrUrl);
+        } else {
+          // try current month and the previous 5 months (configurable)
+          for(var i=0;i<6;i++){
+            var d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            candidates.push(monthDataUrl(d));
+          }
+        }
+
+        tryUrlsSequentially(candidates)
+          .catch(function(){
+            // if no month candidate succeeded, fall back to REST endpoint
+            return fetchJson(restUrl);
           })
           .then(function(data){
             if(Array.isArray(data)){

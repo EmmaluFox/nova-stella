@@ -30,7 +30,7 @@
 
 <div class="ns-eventcard" data-ns-past="1">
   <!-- Container where cards will be rendered -->
-  <div id="ns-past-event-grid" class="ns-eventcard-grid" data-src="https://novastella.co.uk/wp-content/uploads/2026/03/data.json"></div>
+  <div id="ns-past-event-grid" class="ns-eventcard-grid" data-src=""></div>
 
   <!-- Template for an event card -->
   <template id="ns-past-event-template">
@@ -50,8 +50,8 @@
     </div>
   </template>
 
-  <!-- Data is loaded from a JSON file in WordPress media instead of inline JSON.
-       Default path: /wp-content/uploads/data.json
+    <!-- Data is loaded from a JSON file in WordPress media instead of inline JSON.
+      Default path: current month URL (/uploads/YYYY/MM/data.json), then previous month.
        You can override by setting `window.NS_EVENT_DATA_URL` or adding `data-src="/full/path/to/data.json"` on `#ns-event-grid`.
   -->
   <script>
@@ -185,7 +185,7 @@
 
           var info = node.querySelector('.event-info');
           var infoToggle = node.querySelector('.event-info-toggle');
-          var blurb = ev['Talk Blurb'] || ev['Talk Blurb'] || ev['TalkBlurb'] || ev['blurb'] || '';
+          var blurb = ev['Speaker Bio'] || ev['SpeakerBio'] || ev['bio'] || ev['Talk Blurb Text'] || ev['TalkBlurbText'] || '';
           if(info){
             var parts = String(blurb).split(/\r?\n+/).map(function(t){
               return t.trim();
@@ -216,7 +216,16 @@
         if(!grid || grid.getAttribute('data-loaded') === '1' || grid.getAttribute('data-loading') === '1') return;
         grid.setAttribute('data-loading', '1');
         var attrUrl = grid && grid.getAttribute('data-src');
-        var url = window.NS_EVENT_DATA_URL || attrUrl || '/wp-content/uploads/data.json';
+        function monthDataUrl(d){
+          var y = d.getFullYear();
+          var m = String(d.getMonth() + 1).padStart(2, '0');
+          return 'https://novastella.co.uk/wp-content/uploads/' + y + '/' + m + '/data.json';
+        }
+        var now = new Date();
+        var currentMonthUrl = monthDataUrl(now);
+        var prevMonthUrl = monthDataUrl(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+        var forcedUrl = window.NS_EVENT_DATA_URL || attrUrl;
+        var url = forcedUrl || currentMonthUrl;
         // If the url is relative and the site uses a different base, you can provide full media URL.
         var restUrl = '/wp-json/custom/v1/data';
 
@@ -231,20 +240,44 @@
           });
         }
 
-        fetchJson(url)
-          .catch(function(err){
-            // If static media access is forbidden (403) or other error, retry with cache-busting query
-            if(err && (err.status === 403 || err.message.indexOf('HTTP 403') !== -1 || err.name === 'TypeError')){
-              var cbUrl = url + (url.indexOf('?') === -1 ? '?_cb=' + Date.now() : '&_cb=' + Date.now());
-              return fetchJson(cbUrl).catch(function(err2){
-                // If cache-busted attempt also fails, fall back to REST endpoint
-                if(err2 && (err2.status === 403 || (err2.message && err2.message.indexOf('HTTP 403') !== -1))) {
-                  return fetchJson(restUrl);
-                }
-                throw err2;
-              });
-            }
-            throw err;
+        // Try a list of candidate month paths (current, previous, etc.) to find the media JSON.
+        function tryUrlsSequentially(urls){
+          var idx = 0;
+          function attempt(){
+            if(idx >= urls.length) return Promise.reject(new Error('No candidate URLs succeeded'));
+            var u = urls[idx++];
+            return fetchJson(u).catch(function(err){
+              // If we hit a 403 or network type error, try cache-bust for this URL once
+              if(err && (err.status === 403 || (err.message && err.message.indexOf('HTTP 403') !== -1) || err.name === 'TypeError')){
+                var cb = u + (u.indexOf('?') === -1 ? '?_cb=' + Date.now() : '&_cb=' + Date.now());
+                return fetchJson(cb).catch(function(){
+                  return attempt();
+                });
+              }
+              // Otherwise move on to next candidate
+              return attempt();
+            });
+          }
+          return attempt();
+        }
+
+        var candidates = [];
+        if(forcedUrl) {
+          candidates.push(forcedUrl);
+        } else if(attrUrl){
+          candidates.push(attrUrl);
+        } else {
+          // try current month and the previous 5 months (configurable)
+          for(var i=0;i<6;i++){
+            var d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            candidates.push(monthDataUrl(d));
+          }
+        }
+
+        tryUrlsSequentially(candidates)
+          .catch(function(){
+            // if no month candidate succeeded, fall back to REST endpoint
+            return fetchJson(restUrl);
           })
           .then(function(data){
             if(Array.isArray(data)){
@@ -326,7 +359,6 @@
     })();
   </script>
 
-  <!-- Force-load working script in case theme/plugin still enqueues stale /2026/02 URL -->
-  <script defer src="https://novastella.co.uk/wp-content/uploads/2026/03/eventcard-multi-elementor.js"></script>
+  <!-- Removed external script include to avoid overriding past-card logic. -->
 
 </div>
