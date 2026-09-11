@@ -198,11 +198,25 @@
 
     grid.setAttribute('data-loading', '1');
     var attrUrl = grid.getAttribute('data-src');
-    var url = window.NS_EVENT_DATA_URL || attrUrl || '/wp-content/uploads/data.json';
+    function monthDataUrl(d){
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      return 'https://novastella.co.uk/wp-content/uploads/' + y + '/' + m + '/data.json';
+    }
+    var now = new Date();
+    var currentMonthUrl = monthDataUrl(now);
+    var prevMonthUrl = monthDataUrl(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+    var forcedUrl = window.NS_EVENT_DATA_URL || attrUrl;
+    var url = forcedUrl || currentMonthUrl;
     var restUrl = '/wp-json/custom/v1/data';
 
     fetchJson(url)
       .catch(function(err){
+        if(!forcedUrl && prevMonthUrl !== url){
+          return fetchJson(prevMonthUrl).catch(function(){
+            throw err;
+          });
+        }
         if(err && (err.status === 403 || err.name === 'TypeError' || (err.message && err.message.indexOf('HTTP 403') !== -1))){
           var cbUrl = url + (url.indexOf('?') === -1 ? '?_cb=' + Date.now() : '&_cb=' + Date.now());
           return fetchJson(cbUrl).catch(function(err2){

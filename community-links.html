@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community Links</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{
+      margin:0;
+      background:#0a0a0a;
+      font-family:'Space Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,Arial;
+      color:#fff;
+      padding:20px;
+      box-sizing:border-box;
+    }
+
+    .ns-textbox-wrap{
+      width:100%;
+      margin:0 auto;
+      box-sizing:border-box;
+    }
+
+    .ns-textbox-card{
+      background:#0a0a0a;
+      border:1px solid #1a1a1a;
+      border-radius:8px;
+      padding:1rem;
+      box-sizing:border-box;
+    }
+
+    .ns-textbox-title{
+      font-size:1.1rem;
+      font-weight:600;
+      margin:0 0 .6rem;
+      padding:0 .6rem;
+      color:#fff;
+    }
+
+    .ns-textbox-content{
+      font-size:.9rem;
+      color:#ccc;
+      margin:0;
+      padding:.6rem;
+      background:#111;
+      border-radius:4px;
+      line-height:1.45;
+      white-space:normal;
+    }
+
+    .ns-community-feed{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(280px, 360px));
+      justify-content:center;
+      gap:.75rem;
+    }
+
+    .ns-community-card{
+      background:#0f0f0f;
+      border:1px solid #242424;
+      border-radius:8px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:260px;
+      width:100%;
+    }
+
+    .ns-community-thumb{
+      aspect-ratio:16/9;
+      background:linear-gradient(135deg,#1f1f1f,#2c2c2c);
+      border-bottom:1px solid #242424;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#8f8f8f;
+      font-size:.8rem;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+    }
+
+    .ns-community-body{
+      padding:.75rem;
+      display:flex;
+      flex-direction:column;
+      gap:.55rem;
+      flex:1;
+    }
+
+    .ns-community-meta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.5rem;
+      font-size:.78rem;
+      color:#a6a6a6;
+    }
+
+    .ns-community-platform{
+      border:1px solid #3a3a3a;
+      border-radius:999px;
+      padding:.15rem .5rem;
+      color:#ddd;
+      font-weight:600;
+      font-size:.72rem;
+    }
+
+    .ns-community-text{
+      margin:0;
+      color:#d3d3d3;
+      font-size:.86rem;
+      line-height:1.45;
+    }
+
+    .ns-community-link{
+      margin-top:auto;
+      display:inline-block;
+      width:fit-content;
+      text-decoration:none;
+      border:1px solid #4a4a4a;
+      border-radius:6px;
+      color:#fff;
+      font-size:.78rem;
+      font-weight:600;
+      padding:.35rem .6rem;
+      transition:background .2s,border-color .2s;
+    }
+
+    .ns-community-link:hover,
+    .ns-community-link:focus{
+      background:#1c1c1c;
+      border-color:#666;
+    }
+
+    @media (max-width: 900px){
+      .ns-community-feed{ grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); }
+    }
+
+    @media (max-width: 640px){
+      .ns-community-feed{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ns-textbox-wrap">
+    <div class="ns-textbox-card">
+      <h3 class="ns-textbox-title">London Pagan Community Links</h3>
+      <div class="ns-textbox-content">
+        <div class="ns-community-feed">
+          <article class="ns-community-card">
+            <div class="ns-community-thumb">Instagram preview</div>
+            <div class="ns-community-body">
+              <div class="ns-community-meta">
+                <span class="ns-community-platform">Instagram</span>
+                <span>2h ago</span>
+              </div>
+              <p class="ns-community-text">Follow @novastellameetup for behind-the-scenes photos and upcoming event highlights.</p>
+              <a class="ns-community-link" href="https://www.instagram.com/novastellameetup/" target="_blank" rel="noopener noreferrer">Visit profile</a>
+            </div>
+          </article>
+
+          <article class="ns-community-card">
+            <div class="ns-community-thumb">Facebook preview</div>
+            <div class="ns-community-body">
+              <div class="ns-community-meta">
+                <span class="ns-community-platform">Facebook</span>
+                <span>5h ago</span>
+              </div>
+              <p class="ns-community-text">Join our Facebook group for discussion, updates, and meetup announcements.</p>
+              <a class="ns-community-link" href="https://www.facebook.com/groups/1472510443017948/" target="_blank" rel="noopener noreferrer">Visit group</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

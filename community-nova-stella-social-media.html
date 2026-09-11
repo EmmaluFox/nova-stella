@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community Links</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{
+      margin:0;
+      background:#0a0a0a;
+      font-family:'Space Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,Arial;
+      color:#fff;
+      padding:20px;
+      box-sizing:border-box;
+    }
+
+    .ns-textbox-wrap{
+      width:100%;
+      margin:0 auto;
+      box-sizing:border-box;
+    }
+
+    .ns-textbox-card{
+      background:#0a0a0a;
+      border:1px solid #1a1a1a;
+      border-radius:8px;
+      padding:1rem;
+      box-sizing:border-box;
+    }
+
+    .ns-textbox-title{
+      font-size:1.1rem;
+      font-weight:600;
+      margin:0 0 .6rem;
+      padding:0 .6rem;
+      color:#fff;
+    }
+
+    .ns-textbox-content{
+      font-size:.9rem;
+      color:#ccc;
+      margin:0;
+      padding:.6rem;
+      background:#111;
+      border-radius:4px;
+      line-height:1.45;
+      white-space:normal;
+    }
+
+    .ns-community-feed{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(280px, 360px));
+      justify-content:center;
+      gap:.75rem;
+    }
+
+    .ns-community-widget-card{
+      background:#0f0f0f;
+      border:1px solid #242424;
+      border-radius:8px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:320px;
+      width:100%;
+    }
+
+    .ns-community-widget-head{
+      padding:.7rem .8rem;
+      background:linear-gradient(135deg,#1f1f1f,#2c2c2c);
+      border-bottom:1px solid #242424;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:#d6d6d6;
+      font-size:.78rem;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+    }
+
+    .ns-community-widget-slot{
+      padding:.65rem;
+      flex:1;
+      min-height:250px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:#121212;
+      color:#8f8f8f;
+      font-size:.82rem;
+      border:1px dashed #333;
+      margin:.65rem;
+      border-radius:6px;
+    }
+
+    @media (max-width: 900px){
+      .ns-community-feed{ grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); }
+    }
+
+    @media (max-width: 640px){
+      .ns-community-feed{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ns-textbox-wrap">
+    <div class="ns-textbox-card">
+      <h3 class="ns-textbox-title">Nova Stella Community</h3>
+      <div class="ns-textbox-content">
+        <div class="ns-community-feed">
+          <article class="ns-community-widget-card">
+            <div class="ns-community-widget-head">
+              <span>Instagram Feed</span>
+              <span>@novastellameetup</span>
+            </div>
+            <div class="ns-community-widget-slot" id="ns-instagram-widget-slot">
+              Paste your Instagram widget embed code inside this container.
+            </div>
+          </article>
+
+          <article class="ns-community-widget-card">
+            <div class="ns-community-widget-head">
+              <span>Facebook Feed</span>
+              <span>Nova Stella Group</span>
+            </div>
+            <div class="ns-community-widget-slot" id="ns-facebook-widget-slot">
+              Paste your Facebook widget embed code inside this container.
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
