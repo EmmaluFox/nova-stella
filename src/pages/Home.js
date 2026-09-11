@@ -1,6 +1,6 @@
 import React from 'react';
 import './Home.css';
-import eventsData from '../events/events.json';
+import eventsData from '../events/data.json';
 
 function Home() {
   // Get the first upcoming event for the Classes & Events section

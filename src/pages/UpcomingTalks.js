@@ -1,7 +1,7 @@
 import React from 'react';
 import './UpcomingTalks.css';
 import EventCard from '../components/EventCard';
-import eventsData from '../events/events.json';
+import eventsData from '../events/data.json';
 
 function UpcomingTalks() {
   // Transform events.json data to match EventCard props

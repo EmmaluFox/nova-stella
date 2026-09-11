@@ -1,7 +1,7 @@
 import React from 'react';
 import './PastEvents.css';
 import EventCard from '../components/EventCard';
-import eventsData from '../events/events.json';
+import eventsData from '../events/data.json';
 
 function PastEvents() {
   // Filter for past events (dates before today)
